@@ -1,7 +1,9 @@
 package edu.ignat.springinaction.controller;
 
 import edu.ignat.springinaction.model.TacoOrder;
+import edu.ignat.springinaction.repository.OrderRepository;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -15,7 +17,10 @@ import org.springframework.web.bind.support.SessionStatus;
 @Controller
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
+@AllArgsConstructor
 public class OrderController {
+
+    private final OrderRepository orderRepository;
 
     @GetMapping("/current")
     public String orderForm() {
@@ -30,6 +35,7 @@ public class OrderController {
         }
 
         log.info("Order submitted: {}", order);
+        orderRepository.save(order);
         sessionStatus.setComplete();
 
         return "redirect:/";
